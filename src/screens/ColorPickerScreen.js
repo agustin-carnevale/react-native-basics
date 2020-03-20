@@ -1,28 +1,42 @@
-import React, {useState} from 'react'
-import {View, Text, StyleSheet,Button} from 'react-native'
+import React, {useReducer} from 'react'
+import {View, Text, StyleSheet} from 'react-native'
 import ColorCounter from '../components/ColorCounter'
 
-const ColorPickerScreen = ()=>{
-    const [red, setRed] = useState(255)
-    const [green, setGreen] = useState(255)
-    const [blue, setBlue] = useState(255)
+const COLOR_INCREMENT = 15
+const INITIAL_STATE= {red:0,green: 0, blue:0}
+const reducer = (state, action) => {
+    
+    switch(action.type){
+        case 'change_red':
+            return (state.red+action.payload > 255 || state.red+action.payload <0) ? state : {...state, red: state.red + action.payload}
+        case 'change_green':
+            return (state.green+action.payload > 255 || state.green+action.payload <0) ? state : {...state, green: state.green + action.payload}
+        case 'change_blue':
+            return (state.blue+action.payload > 255 || state.blue+action.payload <0) ? state : {...state, blue: state.blue + action.payload}
+        default:
+            return state
+    }
+}
 
+const ColorPickerScreen = ()=>{
+    const [state, dispatch] = useReducer(reducer,INITIAL_STATE)
+    const {red, green, blue} = state
     return (
         <View>
             <ColorCounter 
                 colorName="Red"
-                colorValue={red}
-                setColor={setRed}
+                onIncrease={()=> dispatch({type:'change_red', payload: COLOR_INCREMENT})}
+                onDecrease={()=>dispatch({type:'change_red', payload: -COLOR_INCREMENT})}
             />
             <ColorCounter 
                 colorName="Green"
-                colorValue={green}
-                setColor={setGreen}
+                onIncrease={()=> dispatch({type:'change_green', payload: COLOR_INCREMENT})}
+                onDecrease={()=>dispatch({type:'change_green', payload: -COLOR_INCREMENT})}
             />
             <ColorCounter 
                 colorName="Blue"
-                colorValue={blue}
-                setColor={setBlue}
+                onIncrease={()=> dispatch({type:'change_blue', payload: COLOR_INCREMENT})}
+                onDecrease={()=>dispatch({type:'change_blue', payload: -COLOR_INCREMENT})}
             />
             <View style={{height:100, width:100, backgroundColor: `rgb(${red},${green},${blue})`}}/>
             <Text>{`rgb(${red},${green},${blue})`}</Text>
