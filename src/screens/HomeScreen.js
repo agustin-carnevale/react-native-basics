@@ -31,6 +31,10 @@ const HomeScreen = (props) => {
         title="Go to ColorPicker"
         onPress={()=>props.navigation.navigate('ColorPicker')}
       />
+      <Button 
+        title="Go to Name Input"
+        onPress={()=>props.navigation.navigate('NameInput')}
+      />
       {/* <TouchableOpacity
         onPress={()=>props.navigation.navigate('List')}
       >
